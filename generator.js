@@ -59,8 +59,12 @@ sampler1.connect(chorus);
 const reverbControllerLfo = new Tone.LFO({ min: 0.1, max: 0.9, frequency: 0.001 });
 reverbControllerLfo.connect(freeverb.wet);
 reverbControllerLfo.start();
+/**
+ * @param {number} min
+ * @param {number} max
+ */
 function getRandomBetween(min, max) {
-  if (typeof min !== 'number' || typeof max !== 'number' || min >= max) {
+  if (typeof min !== 'number' || typeof max !== 'number') {
     throw new Error(`Invalid arguments for getRandomBetween: min=${min}, max=${max}`);
   }
   const result = Math.random() * (max - min) + min;
@@ -68,21 +72,23 @@ function getRandomBetween(min, max) {
   return result;
 }
 
+/**
+ * @param {{ (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (time: any): void; (arg0: number): void; }} scheduledFunction
+ * @param {number} minDelay
+ * @param {number} maxDelay
+ */
 function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime = getRandomBetween(minDelay, maxDelay)) {
   console.log('scheduleRandomRepeat called with:', { minDelay, maxDelay, startTime });
-  
-  if (typeof minDelay !== 'number' || typeof maxDelay !== 'number' || minDelay >= maxDelay) {
+  if (typeof minDelay !== 'number' || typeof maxDelay !== 'number') {
     throw new Error(`Invalid delay values: minDelay=${minDelay}, maxDelay=${maxDelay}`);
   }
-  if (typeof startTime !== 'number' || isNaN(startTime) || startTime < 0) {
+  if (typeof startTime !== 'number' || isNaN(startTime)) {
     throw new Error(`Invalid startTime: ${startTime}`);
   }
-  
   Tone.Transport.scheduleOnce(function(time) {
     console.log('Scheduled time:', time);
-    if (isNaN(time) || time < 0) {
-      console.error('Invalid time detected, using fallback value of 0');
-      time = 0; // Fallback to a default value
+    if (isNaN(time)) {
+      throw new Error(`Invalid time for scheduledFunction: ${time}`);
     }
     scheduledFunction(time);
     const delay = getRandomBetween(minDelay, maxDelay);
@@ -91,20 +97,13 @@ function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime =
   }, startTime);
 }
 
-// Start Tone.Transport once
-Tone.start().then(() => {
-  console.log('Tone.js started');
-  Tone.Transport.start();
-});
-
-const oneShots = new Tone.Player({
-  baseUrl: '/oneShots/',
+const oneShots = new Tone.Players({
   urls: {
-    "one": "oS1.wav",
-    "two": "oS2.wav",
-    "three": "oS3.wav",
+    "one": "/oneShots/oS1.wav",
+    "two": "/oneShots/oS2.wav",
+    "three": "/oneShots/oS3.wav",
   },
-  volume: -30,
+  volume: -40,
   onload: function () {
     console.log('oneShots loaded successfully');
     Tone.Transport.start();
@@ -116,60 +115,58 @@ const oneShots = new Tone.Player({
 oneShots.connect(freeverb);
 
 // Function to play a random oneShot
+/**
+ * @param {Tone.Unit.Time | undefined} time
+ */
 function playRandomOneShot(time) {
   const keys = ["one", "two", "three"]; // Keys from the oneShots.urls object
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
   console.log(`Playing oneShot: ${randomKey} at time: ${time}`);
-  
-  if (isNaN(time) || time < 0) {
-    throw new Error(`Invalid time for oneShots.start: ${time}`);
-  }
-  
-  oneShots.start(randomKey, time);
+  oneShots.player(randomKey).start(time);
 }
 
 // Schedule random playback of oneShots
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {any} */ time) {
   playRandomOneShot(time);
-}, 10, 20, getRandomBetween(0, 5));
+}, 10, 20, getRandomBetween(0, 40));
 
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('F4', time);
 }, 15, 30, getRandomBetween(0, 5));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('Ab4', time);
 }, 15, 30, getRandomBetween(0, 5));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('C5', time);
 }, 15, 30, getRandomBetween(0, 15));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('Db5', time);
 }, 15, 30, getRandomBetween(0, 15));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('Eb5', time);
 }, 15, 30);
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('F5', time);
 }, 15, 30);
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler2.triggerAttack('Ab5', time);
 }, 15, 30);
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('C0', time);
 }, 17.25, 30.67, getRandomBetween(10, 50));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('F0', time);
 }, 21.3, 35.3, getRandomBetween(15, 70));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('G2', time);
 }, 19.1, 30, getRandomBetween(20, 80));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('D#2', time);
 }, 30, 50.4, getRandomBetween(60, 90));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('F1', time);
 }, 21.3, 35.3, getRandomBetween(15, 70));
-scheduleRandomRepeat(function(time) {
+scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
   sampler1.triggerAttack('C1', time);
 }, 17.25, 30.67, getRandomBetween(10, 50));
 
