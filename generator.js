@@ -60,7 +60,7 @@ const reverbControllerLfo = new Tone.LFO({ min: 0.1, max: 0.9, frequency: 0.001 
 reverbControllerLfo.connect(freeverb.wet);
 reverbControllerLfo.start();
 function getRandomBetween(min, max) {
-  if (typeof min !== 'number' || typeof max !== 'number') {
+  if (typeof min !== 'number' || typeof max !== 'number' || min >= max) {
     throw new Error(`Invalid arguments for getRandomBetween: min=${min}, max=${max}`);
   }
   const result = Math.random() * (max - min) + min;
@@ -70,16 +70,19 @@ function getRandomBetween(min, max) {
 
 function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime = getRandomBetween(minDelay, maxDelay)) {
   console.log('scheduleRandomRepeat called with:', { minDelay, maxDelay, startTime });
-  if (typeof minDelay !== 'number' || typeof maxDelay !== 'number') {
+  
+  if (typeof minDelay !== 'number' || typeof maxDelay !== 'number' || minDelay >= maxDelay) {
     throw new Error(`Invalid delay values: minDelay=${minDelay}, maxDelay=${maxDelay}`);
   }
-  if (typeof startTime !== 'number' || isNaN(startTime)) {
+  if (typeof startTime !== 'number' || isNaN(startTime) || startTime < 0) {
     throw new Error(`Invalid startTime: ${startTime}`);
   }
+  
   Tone.Transport.scheduleOnce(function(time) {
     console.log('Scheduled time:', time);
-    if (isNaN(time)) {
-      throw new Error(`Invalid time for scheduledFunction: ${time}`);
+    if (isNaN(time) || time < 0) {
+      console.error('Invalid time detected, using fallback value of 0');
+      time = 0; // Fallback to a default value
     }
     scheduledFunction(time);
     const delay = getRandomBetween(minDelay, maxDelay);
@@ -88,7 +91,47 @@ function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime =
   }, startTime);
 }
 
+// Start Tone.Transport once
+Tone.start().then(() => {
+  console.log('Tone.js started');
+  Tone.Transport.start();
+});
 
+const oneShots = new Tone.Player({
+  baseUrl: '/oneShots/',
+  urls: {
+    "one": "oS1.wav",
+    "two": "oS2.wav",
+    "three": "oS3.wav",
+  },
+  volume: -30,
+  onload: function () {
+    console.log('oneShots loaded successfully');
+    Tone.Transport.start();
+  },
+  onerror: function (error) {
+    console.error('Error loading oneShots:', error);
+  },
+});
+oneShots.connect(freeverb);
+
+// Function to play a random oneShot
+function playRandomOneShot(time) {
+  const keys = ["one", "two", "three"]; // Keys from the oneShots.urls object
+  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  console.log(`Playing oneShot: ${randomKey} at time: ${time}`);
+  
+  if (isNaN(time) || time < 0) {
+    throw new Error(`Invalid time for oneShots.start: ${time}`);
+  }
+  
+  oneShots.start(randomKey, time);
+}
+
+// Schedule random playback of oneShots
+scheduleRandomRepeat(function(time) {
+  playRandomOneShot(time);
+}, 10, 20, getRandomBetween(0, 5));
 
 scheduleRandomRepeat(function(time) {
   sampler2.triggerAttack('F4', time);
@@ -129,3 +172,8 @@ scheduleRandomRepeat(function(time) {
 scheduleRandomRepeat(function(time) {
   sampler1.triggerAttack('C1', time);
 }, 17.25, 30.67, getRandomBetween(10, 50));
+
+
+
+
+

@@ -2,12 +2,14 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
+    "strict": true, // Enables all strict type-checking options
     "module": "es2020",
-    "target": "es5",
+    "target": "es6", // Use modern JavaScript features
     "allowJs": true,
-    "moduleResolution": "NodeNext",
-    "checkJs":false
+    "moduleResolution": "node", // Use "node" for broader compatibility
+    "checkJs": true // Enable type checking for JavaScript files
   },
-  "files": ["server/index.ts"]
+  "include": ["server/**/*.ts", "server/**/*.js"], // Include all TypeScript and JavaScript files in the server folder
+  "exclude": ["node_modules"] // Exclude unnecessary files
 }
 
