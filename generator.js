@@ -12,7 +12,7 @@ const sampler1 = new Tone.Sampler({
   },
   attack: 2,
   release: 1.5,
-  volume: -25,
+  volume: -30,
   onload: function () {
     Tone.Transport.start();
   },
