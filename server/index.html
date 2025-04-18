@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Generative Music Classroom</title>
+  </head>
+  <body>
+    <h1>Generative Music Classroom</h1>
+    <p>using <a id="version-link" href="" target="_blank"></a></p>
+    <div id="controls-container">
+      <audio
+        id="controls"
+        controls
+        loop
+        src="<%= require('./silence.mp3') %>"
+      ></audio>
+    </div>
+    <div>
+      <input
+        type="checkbox"
+        id="automatic-play-checkbox"
+        name="automatic-play-checkbox"
+      />
+      <label for="automatic-play-checkbox"
+        >Try to play automatically on page load</label
+      >
+    </div>
+    <p id="tone-load-feedback"></p>
+  </body>
+</html>
