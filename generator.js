@@ -102,6 +102,7 @@ const oneShots = new Tone.Players({
     "one": "/oneShots/oS1.wav",
     "two": "/oneShots/oS2.wav",
     "three": "/oneShots/oS3.wav",
+    "four": "/oneShots/oS4.wav",
   },
   volume: -40,
   onload: function () {
@@ -119,7 +120,7 @@ oneShots.connect(freeverb);
  * @param {Tone.Unit.Time | undefined} time
  */
 function playRandomOneShot(time) {
-  const keys = ["one", "two", "three"]; // Keys from the oneShots.urls object
+  const keys = ["one", "two", "three", "four"]; // Keys from the oneShots.urls object
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
   console.log(`Playing oneShot: ${randomKey} at time: ${time}`);
   oneShots.player(randomKey).start(time);
