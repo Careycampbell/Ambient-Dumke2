@@ -23,8 +23,10 @@ const attachControlHandlers = () => {
       .then(() => import('../generator.js'))
       .then(() => {
         Tone.loaded().then(() => {
-          document.getElementById('tone-load-feedback').innerText =
-            'Audio files loaded!';
+          const feedbackElement = document.getElementById('tone-load-feedback');
+          if (feedbackElement) {
+            feedbackElement.innerText = 'Audio files loaded!';
+          }
         });
       });
   });
@@ -35,13 +37,17 @@ const attachControlHandlers = () => {
     // For now, force student to reload page after stopping
     // so we don't have to deal with disposing nodes and weird "restart" behavior
     const controlsContainer = document.getElementById('controls-container');
-    controlsContainer.removeChild(controls);
+    if (controlsContainer) {
+      controlsContainer.removeChild(controls);
+    }
     const reloadButton = document.createElement('button');
     reloadButton.innerText = 'Refresh';
     reloadButton.addEventListener('click', () => {
       window.location.reload();
     });
-    controlsContainer.append(reloadButton);
+    if (controlsContainer) {
+      controlsContainer.append(reloadButton);
+    }
   });
 };
 
