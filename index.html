@@ -11,7 +11,7 @@
 import * as Tone from 'tone';
 
 const sampler1 = new Tone.Sampler({
-  baseUrl: '/driftDrones/',
+  baseUrl: './driftDrones/',
   urls: {
     "C0": "driftingC.wav",
     "C#0": "driftingDflat.wav",
@@ -28,7 +28,7 @@ const sampler1 = new Tone.Sampler({
 
 })
 const sampler2 = new Tone.Sampler({
-  baseUrl: '/vsco2-ce/upright-piano/',
+  baseUrl: './vsco2-ce/upright-piano/',
   urls: {
     "A0": "a0.wav",
     "C#1": "csharp1.wav",
@@ -108,10 +108,10 @@ function scheduleRandomRepeat(scheduledFunction, minDelay, maxDelay, startTime =
 
 const oneShots = new Tone.Players({
   urls: {
-    "one": "/oneShots/oS1.wav",
-    "two": "/oneShots/oS2.wav",
-    "three": "/oneShots/oS3.wav",
-    "four": "/oneShots/oS4.wav",
+    "one": "./oneShots/oS1.wav",
+    "two": "./oneShots/oS2.wav",
+    "three": "./oneShots/oS3.wav",
+    "four": "./oneShots/oS4.wav",
   },
   volume: -30,
   onload: function () {
