@@ -7,7 +7,9 @@
     "target": "es6", // Use modern JavaScript features
     "allowJs": true,
     "moduleResolution": "node", // Use "node" for broader compatibility
-    "checkJs": true // Enable type checking for JavaScript files
+    "checkJs": true, // Enable type checking for JavaScript files
+    "strictNullChecks": true,
+    "outDir": "./build" // Specify output directory for compiled files outside the source paths
   },
   "include": ["server/**/*.ts", "server/**/*.js"], // Include all TypeScript and JavaScript files in the server folder
   "exclude": ["node_modules"] // Exclude unnecessary files
