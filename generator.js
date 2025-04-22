@@ -104,7 +104,7 @@ const oneShots = new Tone.Players({
     "three": "/oneShots/oS3.wav",
     "four": "/oneShots/oS4.wav",
   },
-  volume: -10,
+  volume: -30,
   onload: function () {
     console.log('oneShots loaded successfully');
     Tone.Transport.start();
