@@ -181,7 +181,11 @@ scheduleRandomRepeat(function(/** @type {Tone.Unit.Time | undefined} */ time) {
 }, 17.25, 30.67, getRandomBetween(10, 50));
 
 
-
+//attach a click listener to a play button
+document.querySelector("button")?.addEventListener("click", async () => {
+	await Tone.start();
+	console.log("audio is ready");
+});
 
 
 		</script>
