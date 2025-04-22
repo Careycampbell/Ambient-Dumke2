@@ -9,7 +9,7 @@
 		<script>
 			// Don't remove this; you'll need it for every lesson!
 			const sampler1 = new Tone.Sampler({
-				baseUrl: '/driftDrones/',
+				baseUrl: './driftDrones/',
 				urls: {
 					"C0": "driftingC.wav",
 					"C#0": "driftingDflat.wav",
@@ -24,7 +24,7 @@
 				},
 			});
 			const sampler2 = new Tone.Sampler({
-				baseUrl: '/vsco2-ce/upright-piano/',
+				baseUrl: './vsco2-ce/upright-piano/',
 				urls: {
 					"A0": "a0.wav",
 					"C#1": "csharp1.wav",
@@ -95,10 +95,10 @@
 
 			const oneShots = new Tone.Players({
 				urls: {
-					"one": "/oneShots/oS1.wav",
-					"two": "/oneShots/oS2.wav",
-					"three": "/oneShots/oS3.wav",
-					"four": "/oneShots/oS4.wav",
+					"one": "./oneShots/oS1.wav",
+					"two": "./oneShots/oS2.wav",
+					"three": "./oneShots/oS3.wav",
+					"four": "./oneShots/oS4.wav",
 				},
 				volume: -30,
 				onload: function () {
@@ -162,9 +162,11 @@
 				sampler1.triggerAttack('C1', time);
 			}, 17.25, 30.67, getRandomBetween(10, 50));
 
-			document.querySelector("button")?.addEventListener("click", async () => {
-				await Tone.start();
-				console.log("audio is ready");
+			new Promise((resolve, reject) => {
+				document.querySelector("button")?.addEventListener("click", async () => {
+					await Tone.start();
+					console.log("audio is ready");
+			})
 			});
 		</script>
 	</head>
